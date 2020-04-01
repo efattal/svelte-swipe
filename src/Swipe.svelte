@@ -4,7 +4,7 @@
 
   const dispatch = createEventDispatcher();
 
-  export let transitionDuration = 200;
+  //export let transitionDuration = 200;
   export let showIndicators = false;
   export let autoplay = false;
   export let delay = 1000;
@@ -201,7 +201,7 @@
 }
 
 .swipeable-slot-wrapper {
-  transition: transform .3s ease-in;
+  transition: transform .3s ease-out;
 }
 
 .swipeable-slot-wrapper.touching {
