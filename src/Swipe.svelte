@@ -24,18 +24,9 @@
 
   let swipeWrapper;
   let swipeHandler;
+  let slotWrapper;
 
   let min = 0;
-  let touchingTpl = `
-    -webkit-transition-duration: 0s;
-    transition-duration: 0s;
-    -webkit-transform: translate3d(-{{val}}px, 0, 0);
-    -ms-transform: translate3d(-{{val}}px, 0, 0);`;
-  let non_touchingTpl = `
-    -webkit-transition-duration: ${transitionDuration}ms;
-    transition-duration: ${transitionDuration}ms;
-    -webkit-transform: translate3d(-{{val}}px, 0, 0);
-    -ms-transform: translate3d(-{{val}}px, 0, 0);`;
   let touching = false;
   let posX = 0;
   let dir = 0;
@@ -83,8 +74,6 @@
     window.addEventListener('resize', update);
   });
 
-
-
   onDestroy(()=>{
     window.removeEventListener('resize', update);
   })
@@ -99,16 +88,10 @@
 
       let _x = e.touches ? e.touches[0].pageX : e.pageX;
       let _diff = (x - _x) + posX;
-      let dir = _x > x ? 0 : 1;
+      dir = _x > x ? 0 : 1;
       if (!dir) { _diff = posX - (_x - x) }
       if (_diff <= (max * (items - 1)) && _diff >= min) {
-
-        for (let i = 0; i < items; i++) {
-          let template = i < 0 ? '{{val}}' : '-{{val}}';
-          let _value = (max * i) - _diff;
-          elems[i].style.cssText = touchingTpl.replace(template, _value).replace(template, _value);
-        }
-
+        slotWrapper.style.transform = `translate3d(${-diff}px, 0, 0)`
         diff = _diff;
       }
 
@@ -129,7 +112,7 @@
 
     let swipe_threshold = 0.85;
     let d_max = (diff / max);
-    let _target = Math.round(d_max);
+    let _target = Math.round(d_max + .25 * (dir || -1));
 
     if(Math.abs(_target - d_max) < swipe_threshold ){
       diff = _target * max;
@@ -139,11 +122,7 @@
 
     posX = diff;
     activeIndicator = (diff / max);
-    for (let i = 0; i < items; i++) {
-      let template = i < 0 ? '{{val}}' : '-{{val}}';
-      let _value = (max * i) - posX;
-      elems[i].style.cssText = non_touchingTpl.replace(template, _value).replace(template, _value);
-    }
+    slotWrapper.style.transform = `translate3d(${-posX}px, 0, 0)`;
 
     window.removeEventListener('mousemove', moveHandler);
     window.removeEventListener('mouseup', endHandler);
@@ -155,8 +134,6 @@
     e.stopImmediatePropagation();
     e.stopPropagation();
     e.preventDefault();
-
-    let max = availableWidth;
 
     touching = true;
     x = e.touches ? e.touches[0].pageX : e.pageX;
@@ -222,6 +199,14 @@
   height: inherit;
 }
 
+.swipeable-slot-wrapper {
+  transition: transform .3s ease-in;
+}
+
+.swipeable-slot-wrapper.touching {
+  transition-duration: 0s;
+}
+
 .swipe-handler {
   width: 100%;
   position: absolute;
@@ -257,11 +242,9 @@
 
   .control {
     position: absolute;
-    top: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    z-index: 2
+    top: 50%;
+    transform: translate(0, -50%);
+    z-index: 2;
   }
 
   .left {
@@ -272,26 +255,39 @@
     right: 0;
   }
 
+  .play, .pause {
+    top: auto;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, 0)
+  }
+
 </style>
 
 <div class="swipe-panel">
   <div class="swipe-item-wrapper" bind:this={swipeWrapper}>
     <div class="swipeable-items">
-      <div class="swipeable-slot-wrapper">
+      <div class="swipeable-slot-wrapper" class:touching={touching} bind:this={slotWrapper}>
         <slot />
       </div>
     </div>
   </div>
   <div class="swipe-handler" bind:this={swipeHandler} on:touchstart={moveStart} on:mousedown={moveStart}></div>
-   {#if showIndicators}
+  {#if showIndicators}
      <div class="swipe-indicator swipe-indicator-inside">
         {#each indicators as x, i }
           <span class="dot {activeIndicator == i ? 'is-active' : ''}" on:click={() => {changeItem(i)}}></span>
         {/each}
     </div>
-   {/if}
+  {/if}
+
   {#if showControls}
     <a href="javascript:" on:click={previous} class="control left"><slot name="previous">&laquo;</slot></a>
     <a href="javascript:" on:click={next} class="control right"><slot name="next">&raquo;</slot></a>
+    {#if autoplay}
+      <a href="javascript:" on:click={() => autoplay=false} class="control pause"><slot name="pause">||</slot></a>
+    {:else}
+      <a href="javascript:" on:click={() => autoplay=true} class="control play"><slot name="play">&gt;</slot></a>
+    {/if}
   {/if}
 </div>
