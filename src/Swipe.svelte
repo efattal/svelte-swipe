@@ -1,16 +1,19 @@
 <script>
 
-  import { onMount, onDestroy } from 'svelte';
+  import { onMount, onDestroy, createEventDispatcher } from 'svelte';
 
+  const dispatch = createEventDispatcher();
 
   export let transitionDuration = 200;
   export let showIndicators = false;
   export let autoplay = false;
   export let delay = 1000;
   export let defaultIndex = 0;
+  export let loop = false;
+  export let showControls = false;
 
 
-  let activeIndicator = 0;
+  export let activeIndicator = 0;
   let indicators;
   let items = 0;
   let availableWidth = 0;
@@ -175,6 +178,26 @@
     played = played < (items - 1) ? ++played : 0;
   }
 
+  function next(){
+    let item = activeIndicator + 1;
+    if(item >= items && loop){
+      item = 0;
+    }
+    if(item < items){
+      changeItem(item);
+    }
+  }
+
+  function previous(){
+    let item = activeIndicator - 1;
+    if(item < 0 && loop){
+      item = items - 1;
+    }
+    if(item >= 0){
+      changeItem(item);
+    }
+  }
+
 </script>
 
 <style>
@@ -232,6 +255,23 @@
   background-color: var(--sv-swipe-indicator-active-color, grey);
 }
 
+  .control {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    z-index: 2
+  }
+
+  .left {
+    left: 0
+  }
+
+  .right {
+    right: 0;
+  }
+
 </style>
 
 <div class="swipe-panel">
@@ -250,5 +290,8 @@
         {/each}
     </div>
    {/if}
-
+  {#if showControls}
+    <a href="javascript:" on:click={previous} class="control left"><slot name="previous">&laquo;</slot></a>
+    <a href="javascript:" on:click={next} class="control right"><slot name="next">&raquo;</slot></a>
+  {/if}
 </div>

@@ -5,7 +5,9 @@
   let showIndicators = false;
   let transitionDuration = 200;
   let defaultIndex = 0;
-  
+  let loop = true;
+  let showControls = true;
+
   function toggle(){
     autoplay = !autoplay;
   }
@@ -69,7 +71,7 @@
     <h1>Swipable items wrapper component for Svelte</h1>
   </div>
   <div class="swipe-holder">
-    <Swipe {showIndicators} {autoplay} {delay} {transitionDuration} {defaultIndex}>
+    <Swipe {showIndicators} {autoplay} {delay} {transitionDuration} {defaultIndex} {loop} {showControls}>
       <SwipeItem>
         <img src="./images/1.jpg" alt="">
       </SwipeItem>
