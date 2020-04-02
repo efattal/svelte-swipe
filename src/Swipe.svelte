@@ -28,6 +28,7 @@
 
   let min = 0;
   let touching = false;
+  let touched = false;
   let posX = 0;
   let dir = 0;
   let x;
@@ -94,7 +95,7 @@
         slotWrapper.style.transform = `translate3d(${-diff}px, 0, 0)`
         diff = _diff;
       }
-
+      touched = true
     }
   }
 
@@ -207,6 +208,10 @@
   transition-duration: 0s;
 }
 
+.swipeable-slot-wrapper.touched {
+  transition-timing-function: linear;
+}
+
 .swipe-handler {
   width: 100%;
   position: absolute;
@@ -267,7 +272,8 @@
 <div class="swipe-panel">
   <div class="swipe-item-wrapper" bind:this={swipeWrapper}>
     <div class="swipeable-items">
-      <div class="swipeable-slot-wrapper" class:touching={touching} bind:this={slotWrapper}>
+      <div class="swipeable-slot-wrapper" class:touching={touching} class:touched={touched} bind:this={slotWrapper}
+          on:transitionend={()=>touched=false}>
         <slot />
       </div>
     </div>
