@@ -210,6 +210,7 @@
 
 .swipeable-slot-wrapper.touched {
   transition-timing-function: linear;
+  transition-duration: .15s
 }
 
 .swipe-handler {
