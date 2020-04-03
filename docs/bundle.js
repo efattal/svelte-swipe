@@ -71,6 +71,9 @@ var app = (function () {
     function space() {
         return text(' ');
     }
+    function empty() {
+        return text('');
+    }
     function listen(node, event, handler, options) {
         node.addEventListener(event, handler, options);
         return () => node.removeEventListener(event, handler, options);
@@ -86,6 +89,9 @@ var app = (function () {
     }
     function set_style(node, key, value, important) {
         node.style.setProperty(key, value, important ? 'important' : '');
+    }
+    function toggle_class(element, name, toggle) {
+        element.classList[toggle ? 'add' : 'remove'](name);
     }
 
     let current_component;
@@ -160,6 +166,19 @@ var app = (function () {
     }
     const outroing = new Set();
     let outros;
+    function group_outros() {
+        outros = {
+            r: 0,
+            c: [],
+            p: outros // parent group
+        };
+    }
+    function check_outros() {
+        if (!outros.r) {
+            run_all(outros.c);
+        }
+        outros = outros.p;
+    }
     function transition_in(block, local) {
         if (block && block.i) {
             outroing.delete(block);
@@ -308,6 +327,18 @@ var app = (function () {
 
     const file = "src\\Swipe.svelte";
 
+    const get_play_slot_changes = () => ({});
+    const get_play_slot_context = () => ({});
+
+    const get_pause_slot_changes = () => ({});
+    const get_pause_slot_context = () => ({});
+
+    const get_next_slot_changes = () => ({});
+    const get_next_slot_context = () => ({});
+
+    const get_previous_slot_changes = () => ({});
+    const get_previous_slot_context = () => ({});
+
     function get_each_context(ctx, list, i) {
     	const child_ctx = Object.create(ctx);
     	child_ctx.x = list[i];
@@ -315,8 +346,8 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (246:3) {#if showIndicators}
-    function create_if_block(ctx) {
+    // (283:2) {#if showIndicators}
+    function create_if_block_2(ctx) {
     	var div;
 
     	var each_value = ctx.indicators;
@@ -334,8 +365,8 @@ var app = (function () {
     			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
-    			attr(div, "class", "swipe-indicator swipe-indicator-inside svelte-ch1qj4");
-    			add_location(div, file, 246, 5, 5843);
+    			attr(div, "class", "swipe-indicator swipe-indicator-inside svelte-occnps");
+    			add_location(div, file, 283, 5, 6231);
     		},
 
     		m: function mount(target, anchor) {
@@ -379,7 +410,7 @@ var app = (function () {
     	};
     }
 
-    // (248:8) {#each indicators as x, i }
+    // (285:8) {#each indicators as x, i }
     function create_each_block(ctx) {
     	var span, span_class_value, dispose;
 
@@ -390,8 +421,8 @@ var app = (function () {
     	return {
     		c: function create() {
     			span = element("span");
-    			attr(span, "class", span_class_value = "dot " + (ctx.activeIndicator == ctx.i ? 'is-active' : '') + " svelte-ch1qj4");
-    			add_location(span, file, 248, 10, 5944);
+    			attr(span, "class", span_class_value = "dot " + (ctx.activeIndicator == ctx.i ? 'is-active' : '') + " svelte-occnps");
+    			add_location(span, file, 285, 10, 6332);
     			dispose = listen(span, "click", click_handler);
     		},
 
@@ -401,7 +432,7 @@ var app = (function () {
 
     		p: function update_1(changed, new_ctx) {
     			ctx = new_ctx;
-    			if ((changed.activeIndicator) && span_class_value !== (span_class_value = "dot " + (ctx.activeIndicator == ctx.i ? 'is-active' : '') + " svelte-ch1qj4")) {
+    			if ((changed.activeIndicator) && span_class_value !== (span_class_value = "dot " + (ctx.activeIndicator == ctx.i ? 'is-active' : '') + " svelte-occnps")) {
     				attr(span, "class", span_class_value);
     			}
     		},
@@ -416,13 +447,333 @@ var app = (function () {
     	};
     }
 
+    // (291:2) {#if showControls}
+    function create_if_block(ctx) {
+    	var a0, t0, t1, a1, t2, t3, current_block_type_index, if_block, if_block_anchor, current, dispose;
+
+    	const previous_slot_template = ctx.$$slots.previous;
+    	const previous_slot = create_slot(previous_slot_template, ctx, get_previous_slot_context);
+
+    	const next_slot_template = ctx.$$slots.next;
+    	const next_slot = create_slot(next_slot_template, ctx, get_next_slot_context);
+
+    	var if_block_creators = [
+    		create_if_block_1,
+    		create_else_block
+    	];
+
+    	var if_blocks = [];
+
+    	function select_block_type(changed, ctx) {
+    		if (ctx.autoplay) return 0;
+    		return 1;
+    	}
+
+    	current_block_type_index = select_block_type(null, ctx);
+    	if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+
+    	return {
+    		c: function create() {
+    			a0 = element("a");
+
+    			if (!previous_slot) {
+    				t0 = text("«");
+    			}
+
+    			if (previous_slot) previous_slot.c();
+    			t1 = space();
+    			a1 = element("a");
+
+    			if (!next_slot) {
+    				t2 = text("»");
+    			}
+
+    			if (next_slot) next_slot.c();
+    			t3 = space();
+    			if_block.c();
+    			if_block_anchor = empty();
+
+    			attr(a0, "href", "javascript:");
+    			attr(a0, "class", "control left svelte-occnps");
+    			add_location(a0, file, 291, 4, 6500);
+
+    			attr(a1, "href", "javascript:");
+    			attr(a1, "class", "control right svelte-occnps");
+    			add_location(a1, file, 292, 4, 6609);
+
+    			dispose = [
+    				listen(a0, "click", ctx.previous),
+    				listen(a1, "click", ctx.next)
+    			];
+    		},
+
+    		l: function claim(nodes) {
+    			if (previous_slot) previous_slot.l(a0_nodes);
+
+    			if (next_slot) next_slot.l(a1_nodes);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, a0, anchor);
+
+    			if (!previous_slot) {
+    				append(a0, t0);
+    			}
+
+    			else {
+    				previous_slot.m(a0, null);
+    			}
+
+    			insert(target, t1, anchor);
+    			insert(target, a1, anchor);
+
+    			if (!next_slot) {
+    				append(a1, t2);
+    			}
+
+    			else {
+    				next_slot.m(a1, null);
+    			}
+
+    			insert(target, t3, anchor);
+    			if_blocks[current_block_type_index].m(target, anchor);
+    			insert(target, if_block_anchor, anchor);
+    			current = true;
+    		},
+
+    		p: function update_1(changed, ctx) {
+    			if (previous_slot && previous_slot.p && changed.$$scope) {
+    				previous_slot.p(
+    					get_slot_changes(previous_slot_template, ctx, changed, get_previous_slot_changes),
+    					get_slot_context(previous_slot_template, ctx, get_previous_slot_context)
+    				);
+    			}
+
+    			if (next_slot && next_slot.p && changed.$$scope) {
+    				next_slot.p(
+    					get_slot_changes(next_slot_template, ctx, changed, get_next_slot_changes),
+    					get_slot_context(next_slot_template, ctx, get_next_slot_context)
+    				);
+    			}
+
+    			var previous_block_index = current_block_type_index;
+    			current_block_type_index = select_block_type(changed, ctx);
+    			if (current_block_type_index === previous_block_index) {
+    				if_blocks[current_block_type_index].p(changed, ctx);
+    			} else {
+    				group_outros();
+    				transition_out(if_blocks[previous_block_index], 1, 1, () => {
+    					if_blocks[previous_block_index] = null;
+    				});
+    				check_outros();
+
+    				if_block = if_blocks[current_block_type_index];
+    				if (!if_block) {
+    					if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+    					if_block.c();
+    				}
+    				transition_in(if_block, 1);
+    				if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    			}
+    		},
+
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(previous_slot, local);
+    			transition_in(next_slot, local);
+    			transition_in(if_block);
+    			current = true;
+    		},
+
+    		o: function outro(local) {
+    			transition_out(previous_slot, local);
+    			transition_out(next_slot, local);
+    			transition_out(if_block);
+    			current = false;
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(a0);
+    			}
+
+    			if (previous_slot) previous_slot.d(detaching);
+
+    			if (detaching) {
+    				detach(t1);
+    				detach(a1);
+    			}
+
+    			if (next_slot) next_slot.d(detaching);
+
+    			if (detaching) {
+    				detach(t3);
+    			}
+
+    			if_blocks[current_block_type_index].d(detaching);
+
+    			if (detaching) {
+    				detach(if_block_anchor);
+    			}
+
+    			run_all(dispose);
+    		}
+    	};
+    }
+
+    // (296:4) {:else}
+    function create_else_block(ctx) {
+    	var a, t, current, dispose;
+
+    	const play_slot_template = ctx.$$slots.play;
+    	const play_slot = create_slot(play_slot_template, ctx, get_play_slot_context);
+
+    	return {
+    		c: function create() {
+    			a = element("a");
+
+    			if (!play_slot) {
+    				t = text(">");
+    			}
+
+    			if (play_slot) play_slot.c();
+
+    			attr(a, "href", "javascript:");
+    			attr(a, "class", "control play svelte-occnps");
+    			add_location(a, file, 296, 6, 6862);
+    			dispose = listen(a, "click", ctx.click_handler_2);
+    		},
+
+    		l: function claim(nodes) {
+    			if (play_slot) play_slot.l(a_nodes);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, a, anchor);
+
+    			if (!play_slot) {
+    				append(a, t);
+    			}
+
+    			else {
+    				play_slot.m(a, null);
+    			}
+
+    			current = true;
+    		},
+
+    		p: function update_1(changed, ctx) {
+    			if (play_slot && play_slot.p && changed.$$scope) {
+    				play_slot.p(
+    					get_slot_changes(play_slot_template, ctx, changed, get_play_slot_changes),
+    					get_slot_context(play_slot_template, ctx, get_play_slot_context)
+    				);
+    			}
+    		},
+
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(play_slot, local);
+    			current = true;
+    		},
+
+    		o: function outro(local) {
+    			transition_out(play_slot, local);
+    			current = false;
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(a);
+    			}
+
+    			if (play_slot) play_slot.d(detaching);
+    			dispose();
+    		}
+    	};
+    }
+
+    // (294:4) {#if autoplay}
+    function create_if_block_1(ctx) {
+    	var a, t, current, dispose;
+
+    	const pause_slot_template = ctx.$$slots.pause;
+    	const pause_slot = create_slot(pause_slot_template, ctx, get_pause_slot_context);
+
+    	return {
+    		c: function create() {
+    			a = element("a");
+
+    			if (!pause_slot) {
+    				t = text("||");
+    			}
+
+    			if (pause_slot) pause_slot.c();
+
+    			attr(a, "href", "javascript:");
+    			attr(a, "class", "control pause svelte-occnps");
+    			add_location(a, file, 294, 6, 6733);
+    			dispose = listen(a, "click", ctx.click_handler_1);
+    		},
+
+    		l: function claim(nodes) {
+    			if (pause_slot) pause_slot.l(a_nodes);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, a, anchor);
+
+    			if (!pause_slot) {
+    				append(a, t);
+    			}
+
+    			else {
+    				pause_slot.m(a, null);
+    			}
+
+    			current = true;
+    		},
+
+    		p: function update_1(changed, ctx) {
+    			if (pause_slot && pause_slot.p && changed.$$scope) {
+    				pause_slot.p(
+    					get_slot_changes(pause_slot_template, ctx, changed, get_pause_slot_changes),
+    					get_slot_context(pause_slot_template, ctx, get_pause_slot_context)
+    				);
+    			}
+    		},
+
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(pause_slot, local);
+    			current = true;
+    		},
+
+    		o: function outro(local) {
+    			transition_out(pause_slot, local);
+    			current = false;
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(a);
+    			}
+
+    			if (pause_slot) pause_slot.d(detaching);
+    			dispose();
+    		}
+    	};
+    }
+
     function create_fragment(ctx) {
-    	var div4, div2, div1, div0, t0, div3, t1, current, dispose;
+    	var div4, div2, div1, div0, t0, div3, t1, t2, current, dispose;
 
     	const default_slot_template = ctx.$$slots.default;
     	const default_slot = create_slot(default_slot_template, ctx, null);
 
-    	var if_block = (ctx.showIndicators) && create_if_block(ctx);
+    	var if_block0 = (ctx.showIndicators) && create_if_block_2(ctx);
+
+    	var if_block1 = (ctx.showControls) && create_if_block(ctx);
 
     	return {
     		c: function create() {
@@ -435,20 +786,25 @@ var app = (function () {
     			t0 = space();
     			div3 = element("div");
     			t1 = space();
-    			if (if_block) if_block.c();
+    			if (if_block0) if_block0.c();
+    			t2 = space();
+    			if (if_block1) if_block1.c();
 
-    			attr(div0, "class", "swipeable-slot-wrapper svelte-ch1qj4");
-    			add_location(div0, file, 239, 6, 5608);
-    			attr(div1, "class", "swipeable-items svelte-ch1qj4");
-    			add_location(div1, file, 238, 4, 5571);
-    			attr(div2, "class", "swipe-item-wrapper svelte-ch1qj4");
-    			add_location(div2, file, 237, 2, 5508);
-    			attr(div3, "class", "swipe-handler svelte-ch1qj4");
-    			add_location(div3, file, 244, 2, 5702);
-    			attr(div4, "class", "swipe-panel svelte-ch1qj4");
-    			add_location(div4, file, 236, 0, 5479);
+    			attr(div0, "class", "swipeable-slot-wrapper svelte-occnps");
+    			toggle_class(div0, "touching", ctx.touching);
+    			toggle_class(div0, "touched", ctx.touched);
+    			add_location(div0, file, 275, 6, 5875);
+    			attr(div1, "class", "swipeable-items svelte-occnps");
+    			add_location(div1, file, 274, 4, 5838);
+    			attr(div2, "class", "swipe-item-wrapper svelte-occnps");
+    			add_location(div2, file, 273, 2, 5775);
+    			attr(div3, "class", "swipe-handler svelte-occnps");
+    			add_location(div3, file, 281, 2, 6091);
+    			attr(div4, "class", "swipe-panel svelte-occnps");
+    			add_location(div4, file, 272, 0, 5746);
 
     			dispose = [
+    				listen(div0, "transitionend", ctx.transitionend_handler),
     				listen(div3, "touchstart", ctx.moveStart),
     				listen(div3, "mousedown", ctx.moveStart)
     			];
@@ -469,12 +825,15 @@ var app = (function () {
     				default_slot.m(div0, null);
     			}
 
+    			ctx.div0_binding(div0);
     			ctx.div2_binding(div2);
     			append(div4, t0);
     			append(div4, div3);
     			ctx.div3_binding(div3);
     			append(div4, t1);
-    			if (if_block) if_block.m(div4, null);
+    			if (if_block0) if_block0.m(div4, null);
+    			append(div4, t2);
+    			if (if_block1) if_block1.m(div4, null);
     			current = true;
     		},
 
@@ -486,28 +845,56 @@ var app = (function () {
     				);
     			}
 
+    			if (changed.touching) {
+    				toggle_class(div0, "touching", ctx.touching);
+    			}
+
+    			if (changed.touched) {
+    				toggle_class(div0, "touched", ctx.touched);
+    			}
+
     			if (ctx.showIndicators) {
-    				if (if_block) {
-    					if_block.p(changed, ctx);
+    				if (if_block0) {
+    					if_block0.p(changed, ctx);
     				} else {
-    					if_block = create_if_block(ctx);
-    					if_block.c();
-    					if_block.m(div4, null);
+    					if_block0 = create_if_block_2(ctx);
+    					if_block0.c();
+    					if_block0.m(div4, t2);
     				}
-    			} else if (if_block) {
-    				if_block.d(1);
-    				if_block = null;
+    			} else if (if_block0) {
+    				if_block0.d(1);
+    				if_block0 = null;
+    			}
+
+    			if (ctx.showControls) {
+    				if (if_block1) {
+    					if_block1.p(changed, ctx);
+    					transition_in(if_block1, 1);
+    				} else {
+    					if_block1 = create_if_block(ctx);
+    					if_block1.c();
+    					transition_in(if_block1, 1);
+    					if_block1.m(div4, null);
+    				}
+    			} else if (if_block1) {
+    				group_outros();
+    				transition_out(if_block1, 1, 1, () => {
+    					if_block1 = null;
+    				});
+    				check_outros();
     			}
     		},
 
     		i: function intro(local) {
     			if (current) return;
     			transition_in(default_slot, local);
+    			transition_in(if_block1);
     			current = true;
     		},
 
     		o: function outro(local) {
     			transition_out(default_slot, local);
+    			transition_out(if_block1);
     			current = false;
     		},
 
@@ -517,9 +904,11 @@ var app = (function () {
     			}
 
     			if (default_slot) default_slot.d(detaching);
+    			ctx.div0_binding(null);
     			ctx.div2_binding(null);
     			ctx.div3_binding(null);
-    			if (if_block) if_block.d();
+    			if (if_block0) if_block0.d();
+    			if (if_block1) if_block1.d();
     			run_all(dispose);
     		}
     	};
@@ -530,10 +919,8 @@ var app = (function () {
     let min = 0;
 
     function instance($$self, $$props, $$invalidate) {
-    	let { transitionDuration = 200, showIndicators = false, autoplay = false, delay = 1000, defaultIndex = 0 } = $$props;
 
-
-      let activeIndicator = 0;
+      let { transitionDuration = 200, showIndicators = false, autoplay = false, delay = 1000, defaultIndex = 0, loop = false, showControls = false, activeIndicator = 0 } = $$props;
       let indicators;
       let items = 0;
       let availableWidth = 0;
@@ -543,18 +930,11 @@ var app = (function () {
 
       let swipeWrapper;
       let swipeHandler;
-      let touchingTpl = `
-    -webkit-transition-duration: 0s;
-    transition-duration: 0s;
-    -webkit-transform: translate3d(-{{val}}px, 0, 0);
-    -ms-transform: translate3d(-{{val}}px, 0, 0);`;
-      let non_touchingTpl = `
-    -webkit-transition-duration: ${transitionDuration}ms;
-    transition-duration: ${transitionDuration}ms;
-    -webkit-transform: translate3d(-{{val}}px, 0, 0);
-    -ms-transform: translate3d(-{{val}}px, 0, 0);`;
+      let slotWrapper;
       let touching = false;
+      let touched = false;
       let posX = 0;
+      let dir = 0;
       let x;
 
 
@@ -585,8 +965,6 @@ var app = (function () {
         window.addEventListener('resize', update);
       });
 
-
-
       onDestroy(()=>{
         window.removeEventListener('resize', update);
       });
@@ -601,18 +979,13 @@ var app = (function () {
 
           let _x = e.touches ? e.touches[0].pageX : e.pageX;
           let _diff = (x - _x) + posX;
-          let dir = _x > x ? 0 : 1;
+          dir = _x > x ? 0 : 1;
           if (!dir) { _diff = posX - (_x - x); }
           if (_diff <= (max * (items - 1)) && _diff >= min) {
-
-            for (let i = 0; i < items; i++) {
-              let template = i < 0 ? '{{val}}' : '-{{val}}';
-              let _value = (max * i) - _diff;
-              elems[i].style.cssText = touchingTpl.replace(template, _value).replace(template, _value);        }
-
+            slotWrapper.style.transform = `translate3d(${-diff}px, 0, 0)`; $$invalidate('slotWrapper', slotWrapper);
             diff = _diff;
           }
-
+          $$invalidate('touched', touched = true);
         }
       }
 
@@ -623,27 +996,24 @@ var app = (function () {
 
         let max = availableWidth;
 
-        touching = false;
+        $$invalidate('touching', touching = false);
         x = null;
 
 
 
         let swipe_threshold = 0.85;
         let d_max = (diff / max);
-        let _target = Math.round(d_max);
+        let _target = Math.round(d_max + .25 * (dir || -1));
 
         if(Math.abs(_target - d_max) < swipe_threshold ){
           diff = _target * max;
         }else{
-          diff = ( (_target + 1)) * max;
+          diff = (dir ? (_target - 1) : (_target + 1)) * max;
         }
 
         posX = diff;
         $$invalidate('activeIndicator', activeIndicator = (diff / max));
-        for (let i = 0; i < items; i++) {
-          let template = i < 0 ? '{{val}}' : '-{{val}}';
-          let _value = (max * i) - posX;
-          elems[i].style.cssText = non_touchingTpl.replace(template, _value).replace(template, _value);    }
+        slotWrapper.style.transform = `translate3d(${-posX}px, 0, 0)`; $$invalidate('slotWrapper', slotWrapper);
 
         window.removeEventListener('mousemove', moveHandler);
         window.removeEventListener('mouseup', endHandler);
@@ -656,7 +1026,7 @@ var app = (function () {
         e.stopPropagation();
         e.preventDefault();
 
-        touching = true;
+        $$invalidate('touching', touching = true);
         x = e.touches ? e.touches[0].pageX : e.pageX;
         window.addEventListener('mousemove', moveHandler);
         window.addEventListener('mouseup', endHandler);
@@ -675,12 +1045,44 @@ var app = (function () {
         changeItem(played);
         played = played < (items - 1) ? ++played : 0;  }
 
-    	const writable_props = ['transitionDuration', 'showIndicators', 'autoplay', 'delay', 'defaultIndex'];
+      function next(){
+        let item = activeIndicator + 1;
+        if(item >= items && loop){
+          item = 0;
+        }
+        if(item < items){
+          changeItem(item);
+        }
+      }
+
+      function previous(){
+        let item = activeIndicator - 1;
+        if(item < 0 && loop){
+          item = items - 1;
+        }
+        if(item >= 0){
+          changeItem(item);
+        }
+      }
+
+    	const writable_props = ['transitionDuration', 'showIndicators', 'autoplay', 'delay', 'defaultIndex', 'loop', 'showControls', 'activeIndicator'];
     	Object.keys($$props).forEach(key => {
     		if (!writable_props.includes(key) && !key.startsWith('$$')) console.warn(`<Swipe> was created with unknown prop '${key}'`);
     	});
 
     	let { $$slots = {}, $$scope } = $$props;
+
+    	function div0_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+    			$$invalidate('slotWrapper', slotWrapper = $$value);
+    		});
+    	}
+
+    	function transitionend_handler() {
+    		const $$result = touched=false;
+    		$$invalidate('touched', touched);
+    		return $$result;
+    	}
 
     	function div2_binding($$value) {
     		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
@@ -696,12 +1098,27 @@ var app = (function () {
 
     	function click_handler({ i }) {changeItem(i);}
 
+    	function click_handler_1() {
+    		const $$result = autoplay=false;
+    		$$invalidate('autoplay', autoplay);
+    		return $$result;
+    	}
+
+    	function click_handler_2() {
+    		const $$result = autoplay=true;
+    		$$invalidate('autoplay', autoplay);
+    		return $$result;
+    	}
+
     	$$self.$set = $$props => {
     		if ('transitionDuration' in $$props) $$invalidate('transitionDuration', transitionDuration = $$props.transitionDuration);
     		if ('showIndicators' in $$props) $$invalidate('showIndicators', showIndicators = $$props.showIndicators);
     		if ('autoplay' in $$props) $$invalidate('autoplay', autoplay = $$props.autoplay);
     		if ('delay' in $$props) $$invalidate('delay', delay = $$props.delay);
     		if ('defaultIndex' in $$props) $$invalidate('defaultIndex', defaultIndex = $$props.defaultIndex);
+    		if ('loop' in $$props) $$invalidate('loop', loop = $$props.loop);
+    		if ('showControls' in $$props) $$invalidate('showControls', showControls = $$props.showControls);
+    		if ('activeIndicator' in $$props) $$invalidate('activeIndicator', activeIndicator = $$props.activeIndicator);
     		if ('$$scope' in $$props) $$invalidate('$$scope', $$scope = $$props.$$scope);
     	};
 
@@ -725,15 +1142,26 @@ var app = (function () {
     		autoplay,
     		delay,
     		defaultIndex,
+    		loop,
+    		showControls,
     		activeIndicator,
     		indicators,
     		swipeWrapper,
     		swipeHandler,
+    		slotWrapper,
+    		touching,
+    		touched,
     		moveStart,
     		changeItem,
+    		next,
+    		previous,
+    		div0_binding,
+    		transitionend_handler,
     		div2_binding,
     		div3_binding,
     		click_handler,
+    		click_handler_1,
+    		click_handler_2,
     		$$slots,
     		$$scope
     	};
@@ -742,7 +1170,7 @@ var app = (function () {
     class Swipe extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance, create_fragment, safe_not_equal, ["transitionDuration", "showIndicators", "autoplay", "delay", "defaultIndex"]);
+    		init(this, options, instance, create_fragment, safe_not_equal, ["transitionDuration", "showIndicators", "autoplay", "delay", "defaultIndex", "loop", "showControls", "activeIndicator"]);
     	}
 
     	get transitionDuration() {
@@ -782,6 +1210,30 @@ var app = (function () {
     	}
 
     	set defaultIndex(value) {
+    		throw new Error("<Swipe>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get loop() {
+    		throw new Error("<Swipe>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set loop(value) {
+    		throw new Error("<Swipe>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get showControls() {
+    		throw new Error("<Swipe>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set showControls(value) {
+    		throw new Error("<Swipe>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get activeIndicator() {
+    		throw new Error("<Swipe>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set activeIndicator(value) {
     		throw new Error("<Swipe>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
@@ -892,7 +1344,7 @@ var app = (function () {
 
     const file$2 = "dev\\App.svelte";
 
-    // (73:6) <SwipeItem>
+    // (75:6) <SwipeItem>
     function create_default_slot_9(ctx) {
     	var img;
 
@@ -902,7 +1354,7 @@ var app = (function () {
     			attr(img, "src", "./images/1.jpg");
     			attr(img, "alt", "");
     			attr(img, "class", "svelte-1k7khib");
-    			add_location(img, file$2, 73, 8, 1382);
+    			add_location(img, file$2, 75, 8, 1450);
     		},
 
     		m: function mount(target, anchor) {
@@ -917,7 +1369,7 @@ var app = (function () {
     	};
     }
 
-    // (77:6) <SwipeItem>
+    // (79:6) <SwipeItem>
     function create_default_slot_8(ctx) {
     	var img;
 
@@ -927,7 +1379,7 @@ var app = (function () {
     			attr(img, "src", "./images/2.jpg");
     			attr(img, "alt", "");
     			attr(img, "class", "svelte-1k7khib");
-    			add_location(img, file$2, 77, 8, 1466);
+    			add_location(img, file$2, 79, 8, 1534);
     		},
 
     		m: function mount(target, anchor) {
@@ -942,7 +1394,7 @@ var app = (function () {
     	};
     }
 
-    // (81:6) <SwipeItem>
+    // (83:6) <SwipeItem>
     function create_default_slot_7(ctx) {
     	var img;
 
@@ -952,7 +1404,7 @@ var app = (function () {
     			attr(img, "src", "./images/3.jpg");
     			attr(img, "alt", "");
     			attr(img, "class", "svelte-1k7khib");
-    			add_location(img, file$2, 81, 8, 1550);
+    			add_location(img, file$2, 83, 8, 1618);
     		},
 
     		m: function mount(target, anchor) {
@@ -967,7 +1419,7 @@ var app = (function () {
     	};
     }
 
-    // (85:6) <SwipeItem>
+    // (87:6) <SwipeItem>
     function create_default_slot_6(ctx) {
     	var img;
 
@@ -977,7 +1429,7 @@ var app = (function () {
     			attr(img, "src", "./images/4.jpg");
     			attr(img, "alt", "");
     			attr(img, "class", "svelte-1k7khib");
-    			add_location(img, file$2, 85, 8, 1634);
+    			add_location(img, file$2, 87, 8, 1702);
     		},
 
     		m: function mount(target, anchor) {
@@ -992,7 +1444,7 @@ var app = (function () {
     	};
     }
 
-    // (72:4) <Swipe {showIndicators} {autoplay} {delay} {transitionDuration} {defaultIndex}>
+    // (74:4) <Swipe {showIndicators} {autoplay} {delay} {transitionDuration} {defaultIndex} {loop} {showControls}>
     function create_default_slot_5(ctx) {
     	var t0, t1, t2, current;
 
@@ -1113,7 +1565,7 @@ var app = (function () {
     	};
     }
 
-    // (99:6) <SwipeItem>
+    // (101:6) <SwipeItem>
     function create_default_slot_4(ctx) {
     	var div, button, dispose;
 
@@ -1123,10 +1575,10 @@ var app = (function () {
     			button = element("button");
     			button.textContent = "Say Hi";
     			attr(button, "class", "has-pointer-event svelte-1k7khib");
-    			add_location(button, file$2, 100, 10, 2059);
+    			add_location(button, file$2, 102, 10, 2127);
     			attr(div, "class", "is-stack is-center svelte-1k7khib");
     			set_style(div, "background", "teal");
-    			add_location(div, file$2, 99, 8, 1991);
+    			add_location(div, file$2, 101, 8, 2059);
     			dispose = listen(button, "click", sayHi);
     		},
 
@@ -1147,7 +1599,7 @@ var app = (function () {
     	};
     }
 
-    // (105:6) <SwipeItem>
+    // (107:6) <SwipeItem>
     function create_default_slot_3(ctx) {
     	var div, button, dispose;
 
@@ -1157,10 +1609,10 @@ var app = (function () {
     			button = element("button");
     			button.textContent = "Say Hi";
     			attr(button, "class", "has-pointer-event svelte-1k7khib");
-    			add_location(button, file$2, 106, 10, 2267);
+    			add_location(button, file$2, 108, 10, 2335);
     			attr(div, "class", "is-stack is-center svelte-1k7khib");
     			set_style(div, "background", "yellowgreen");
-    			add_location(div, file$2, 105, 8, 2192);
+    			add_location(div, file$2, 107, 8, 2260);
     			dispose = listen(button, "click", sayHi);
     		},
 
@@ -1181,7 +1633,7 @@ var app = (function () {
     	};
     }
 
-    // (111:6) <SwipeItem>
+    // (113:6) <SwipeItem>
     function create_default_slot_2(ctx) {
     	var div, button, dispose;
 
@@ -1191,10 +1643,10 @@ var app = (function () {
     			button = element("button");
     			button.textContent = "Say Hi";
     			attr(button, "class", "has-pointer-event svelte-1k7khib");
-    			add_location(button, file$2, 112, 10, 2468);
+    			add_location(button, file$2, 114, 10, 2536);
     			attr(div, "class", "is-stack is-center svelte-1k7khib");
     			set_style(div, "background", "aqua");
-    			add_location(div, file$2, 111, 8, 2400);
+    			add_location(div, file$2, 113, 8, 2468);
     			dispose = listen(button, "click", sayHi);
     		},
 
@@ -1215,7 +1667,7 @@ var app = (function () {
     	};
     }
 
-    // (117:6) <SwipeItem>
+    // (119:6) <SwipeItem>
     function create_default_slot_1(ctx) {
     	var div, button, dispose;
 
@@ -1225,10 +1677,10 @@ var app = (function () {
     			button = element("button");
     			button.textContent = "Say Hi";
     			attr(button, "class", "has-pointer-event svelte-1k7khib");
-    			add_location(button, file$2, 118, 10, 2675);
+    			add_location(button, file$2, 120, 10, 2743);
     			attr(div, "class", "is-stack is-center svelte-1k7khib");
     			set_style(div, "background", "lightcoral");
-    			add_location(div, file$2, 117, 8, 2601);
+    			add_location(div, file$2, 119, 8, 2669);
     			dispose = listen(button, "click", sayHi);
     		},
 
@@ -1249,7 +1701,7 @@ var app = (function () {
     	};
     }
 
-    // (98:4) <Swipe>
+    // (100:4) <Swipe>
     function create_default_slot(ctx) {
     	var t0, t1, t2, current;
 
@@ -1380,6 +1832,8 @@ var app = (function () {
     		delay: delay,
     		transitionDuration: transitionDuration,
     		defaultIndex: defaultIndex,
+    		loop: loop,
+    		showControls: showControls,
     		$$slots: { default: [create_default_slot_5] },
     		$$scope: { ctx }
     	},
@@ -1414,26 +1868,26 @@ var app = (function () {
     			div3 = element("div");
     			swipe1.$$.fragment.c();
     			attr(h1, "class", "svelte-1k7khib");
-    			add_location(h1, file$2, 68, 4, 1176);
+    			add_location(h1, file$2, 70, 4, 1222);
     			attr(div0, "class", "desc-holder svelte-1k7khib");
-    			add_location(div0, file$2, 67, 2, 1145);
+    			add_location(div0, file$2, 69, 2, 1191);
     			attr(div1, "class", "swipe-holder svelte-1k7khib");
-    			add_location(div1, file$2, 70, 2, 1242);
+    			add_location(div1, file$2, 72, 2, 1288);
     			attr(input0, "type", "button");
     			input0.value = input0_value_value = ctx.autoplay ? 'Stop': 'Play';
     			attr(input0, "class", "svelte-1k7khib");
-    			add_location(input0, file$2, 90, 4, 1748);
+    			add_location(input0, file$2, 92, 4, 1816);
     			attr(input1, "type", "checkbox");
     			attr(input1, "class", "svelte-1k7khib");
-    			add_location(input1, file$2, 91, 20, 1843);
+    			add_location(input1, file$2, 93, 20, 1911);
     			attr(div2, "class", "option-holder svelte-1k7khib");
-    			add_location(div2, file$2, 89, 2, 1715);
+    			add_location(div2, file$2, 91, 2, 1783);
     			attr(hr, "class", "svelte-1k7khib");
-    			add_location(hr, file$2, 94, 2, 1913);
+    			add_location(hr, file$2, 96, 2, 1981);
     			attr(div3, "class", "swipe-holder svelte-1k7khib");
-    			add_location(div3, file$2, 96, 2, 1923);
+    			add_location(div3, file$2, 98, 2, 1991);
     			attr(div4, "class", "container svelte-1k7khib");
-    			add_location(div4, file$2, 66, 0, 1117);
+    			add_location(div4, file$2, 68, 0, 1163);
 
     			dispose = [
     				listen(input0, "click", ctx.toggle),
@@ -1475,6 +1929,8 @@ var app = (function () {
     			if (changed.delay) swipe0_changes.delay = delay;
     			if (changed.transitionDuration) swipe0_changes.transitionDuration = transitionDuration;
     			if (changed.defaultIndex) swipe0_changes.defaultIndex = defaultIndex;
+    			if (changed.loop) swipe0_changes.loop = loop;
+    			if (changed.showControls) swipe0_changes.showControls = showControls;
     			if (changed.$$scope) swipe0_changes.$$scope = { changed, ctx };
     			swipe0.$set(swipe0_changes);
 
@@ -1524,6 +1980,10 @@ var app = (function () {
 
     let defaultIndex = 0;
 
+    let loop = true;
+
+    let showControls = true;
+
     function sayHi(){
       alert('Hi');
     }
@@ -1531,7 +1991,7 @@ var app = (function () {
     function instance$2($$self, $$props, $$invalidate) {
     	let autoplay = false;
       let showIndicators = false;
-      
+
       function toggle(){
         $$invalidate('autoplay', autoplay = !autoplay);
       }
