@@ -1,5 +1,6 @@
 <script>
-  export let classes = '';
+  let classes = '';
+  export {classes  as class};
 </script>
 
 <style>

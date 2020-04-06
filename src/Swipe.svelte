@@ -185,7 +185,7 @@
 .swipe-panel {
   position: relative;
   height: var(--sv-swipe-panel-height, 100%);
-  width: var(--sv-swipe-panel-width, inherit);
+  width: var(--sv-swipe-panel-width, 100%);
 }
 .swipe-item-wrapper{
   overflow: hidden;
@@ -248,7 +248,7 @@
   background-color: var(--sv-swipe-indicator-active-color, grey);
 }
 
-  .control {
+  .control-ct {
     position: absolute;
     top: 50%;
     transform: translate(0, -50%);
@@ -291,12 +291,12 @@
   {/if}
 
   {#if showControls}
-    <a href="javascript:" on:click={previous} class="control left"><slot name="previous">&laquo;</slot></a>
-    <a href="javascript:" on:click={next} class="control right"><slot name="next">&raquo;</slot></a>
+    <a href="javascript:" on:click={previous} class="control-ct left"><slot name="previous">&laquo;</slot></a>
+    <a href="javascript:" on:click={next} class="control-ct right"><slot name="next">&raquo;</slot></a>
     {#if autoplay}
-      <a href="javascript:" on:click={() => autoplay=false} class="control pause"><slot name="pause">||</slot></a>
+      <a href="javascript:" on:click={() => autoplay=false} class="control-ct pause"><slot name="pause">||</slot></a>
     {:else}
-      <a href="javascript:" on:click={() => autoplay=true} class="control play"><slot name="play">&gt;</slot></a>
+      <a href="javascript:" on:click={() => autoplay=true} class="control-ct play"><slot name="play">&gt;</slot></a>
     {/if}
   {/if}
 </div>
