@@ -51,7 +51,6 @@
     }
   }
 
-
   function update(){
     swipeHandler.style.top = topClearence + 'px';
     availableWidth = swipeWrapper.querySelector('.swipeable-items').offsetWidth;
@@ -76,6 +75,9 @@
   });
 
   onDestroy(()=>{
+    if(run_interval) {
+      clearInterval(run_interval)
+    }
     window.removeEventListener('resize', update);
   })
 
