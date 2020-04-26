@@ -42,7 +42,7 @@
 
   $: {
     if(autoplay && !run_interval){
-      run_interval = setInterval(changeView , delay);
+      run_interval = setInterval(next , delay);
     }
 
     if(!autoplay && run_interval){
@@ -151,11 +151,6 @@
     diff = max * item;
     activeIndicator = item;
     endHandler();
-  }
-
-  function changeView() {
-    changeItem(played);
-    played = played < (items - 1) ? ++played : 0;
   }
 
   function next(){
