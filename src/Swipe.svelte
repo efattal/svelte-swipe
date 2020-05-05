@@ -129,8 +129,8 @@
 
         window.removeEventListener('mousemove', moveHandler);
         window.removeEventListener('mouseup', endHandler);
-        window.removeEventListener('touchmove', moveHandler);
-        window.removeEventListener('touchend', endHandler);
+        window.removeEventListener('touchmove', moveHandler, {passive: true});
+        window.removeEventListener('touchend', endHandler, {passive: true});
     }
 
     function moveStart(e) {
@@ -142,8 +142,8 @@
         x = e.touches ? e.touches[0].pageX : e.pageX;
         window.addEventListener('mousemove', moveHandler);
         window.addEventListener('mouseup', endHandler);
-        window.addEventListener('touchmove', moveHandler);
-        window.addEventListener('touchend', endHandler);
+        window.addEventListener('touchmove', moveHandler, {passive: true});
+        window.addEventListener('touchend', endHandler, {passive: true});
     }
 
     function changeItem(item) {
