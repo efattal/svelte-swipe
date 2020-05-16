@@ -292,9 +292,9 @@
         <a href="" on:click|preventDefault={previous} class="control-ct left"><slot name="previous">&laquo;</slot></a>
         <a href="" on:click|preventDefault={next} class="control-ct right"><slot name="next">&raquo;</slot></a>
         {#if autoplay}
-            <a href="" on:click|preventDefault={() => autoplay=false} class="control-ct pause"><slot name="pause">||</slot></a>
+        <a href="" on:click|preventDefault={() => autoplay=false} class="control-ct pause"><slot name="pause">||</slot></a>
         {:else}
-            <a href="" on:click|preventDefault={() => autoplay=true} class="control-ct play"><slot name="play">&gt;</slot></a>
+        <a href="" on:click|preventDefault={() => autoplay=true} class="control-ct play"><slot name="play">&gt;</slot></a>
         {/if}
     {/if}
 </div>
