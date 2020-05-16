@@ -250,7 +250,6 @@
         top: 50%;
         transform: translate(0, -50%);
         z-index: 2;
-        cursor: pointer;
     }
 
     .left {
@@ -284,18 +283,18 @@
     {#if showIndicators}
         <div class="swipe-indicator swipe-indicator-inside">
             {#each indicators as x, i }
-                <span class="dot {activeIndicator == i ? 'is-active' : ''}" on:click={() => {changeItem(i)}}></span>
+                <a href="" class="dot {activeIndicator == i ? 'is-active' : ''}" on:click|preventDefault={() => changeItem(i)}></a>
             {/each}
         </div>
     {/if}
 
     {#if showControls}
-        <span on:click={previous} class="control-ct left"><slot name="previous">&laquo;</slot></span>
-        <span on:click={next} class="control-ct right"><slot name="next">&raquo;</slot></span>
+        <a href="" on:click|preventDefault={previous} class="control-ct left"><slot name="previous">&laquo;</slot></a>
+        <a href="" on:click|preventDefault={next} class="control-ct right"><slot name="next">&raquo;</slot></a>
         {#if autoplay}
-            <span on:click={() => autoplay=false} class="control-ct pause"><slot name="pause">||</slot></span>
+            <a href="" on:click|preventDefault={() => autoplay=false} class="control-ct pause"><slot name="pause">||</slot></a>
         {:else}
-            <span on:click={() => autoplay=true} class="control-ct play"><slot name="play">&gt;</slot></span>
+            <a href="" on:click|preventDefault={() => autoplay=true} class="control-ct play"><slot name="play">&gt;</slot></a>
         {/if}
     {/if}
 </div>
